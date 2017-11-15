@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
  * Date: 11/04/17
  * Class: CSIS 2450
  * Assignment: Group Project
+ * Jessica was here!
  */
 public class GameWindow extends JFrame {
 
