@@ -8,7 +8,7 @@ package snake;
  */
 public enum Direction {
 	RIGHT,	//Movement will occur to the right
-	UP,		//Movement will occur in the upward direction
+	UP,	//Movement will occur in the upward direction
 	LEFT,	//Movement will occur to the left
 	DOWN;	//Movement will occur in the downward direction
 }
