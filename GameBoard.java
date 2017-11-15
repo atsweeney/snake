@@ -13,7 +13,7 @@ public class GameBoard {
 	/**
 	 * Attributes
 	 */
-	private Snake player1Snake;
+	public Snake player1Snake;
 	
 	private PlayerScore player1Info;
 	
