@@ -7,8 +7,14 @@ package snake;
  * Assignment: Group Project
  */
 public enum Direction {
-	RIGHT,	//Movement will occur to the right
-	UP,	//Movement will occur in the upward direction
-	LEFT,	//Movement will occur to the left
-	DOWN;	//Movement will occur in the downward direction
+	RIGHT(90),  //Movement will occur to the right
+	UP(360),		//Movement will occur in the upward direction
+	LEFT(270),	//Movement will occur to the left
+	DOWN(180);	//Movement will occur in the downward direction
+	
+	private final int degrees;
+	
+	Direction(int degree){
+		this.degrees = degree;
+	}
 }
