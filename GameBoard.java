@@ -39,6 +39,35 @@ public class GameBoard {
 		this.width = width;
 		this.player1Info.setName(playerName);
 	}
+	
+	/**
+	 * METHOD getRandomPoint generates a random point that does not intersect
+	 * the snake.
+	 * 
+	 * @param s
+	 *            is the Snake object
+	 * @return point is the Point2D object that does not intersect the Snake
+	 *         object
+	 */
+	public Point2D getRandomPoint(Snake s) {
+		Point2D point = new Point2D.Double();
+		boolean search = true;
+		while (search) {
+			int x = (int) (Math.random() * 20) + 1;
+			int y = (int) (Math.random() * 20) + 1;
+			point.setLocation(x, y);
+
+			if (s.getSnake().contains(point)) {
+				System.out.println("Point found.");
+				search = true;
+			} else {
+				System.out.println("Point NOT found.");
+				search = false;
+			}
+		}
+		return point;
+
+	}
 
 	/**
 	 * Player Snake Getter 
