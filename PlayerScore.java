@@ -21,7 +21,7 @@ public class PlayerScore {
 	 * @param score is the score of the player
 	 */
 	public PlayerScore(String name, int score) {
-		this.name = name;
+		this.setName(name);
 		this.score = score;
 	}
 	
@@ -54,7 +54,7 @@ public class PlayerScore {
 	 * @param points is the number of points the score is increased by
 	 */
 	public void increaseScore(int points) {
-		
+		this.score += points;
 	}
 	
 	/**
@@ -62,6 +62,6 @@ public class PlayerScore {
 	 * @param points is the number of points the score is decreased by
 	 */
 	public void decreaseScore(int points) {
-		
+		this.score -= points;
 	}
 }

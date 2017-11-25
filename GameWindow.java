@@ -2,10 +2,8 @@ package snake;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.util.Timer;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -13,8 +11,8 @@ import javax.swing.border.EmptyBorder;
  * Date: 11/04/17
  * Class: CSIS 2450
  * Assignment: Group Project
- * Jessica was here!
  */
+@SuppressWarnings("serial")
 public class GameWindow extends JFrame {
 
 	/**
@@ -26,14 +24,6 @@ public class GameWindow extends JFrame {
 	
 	private int width;
 	
-	private int dotSize;
-	
-	private int moveSpeed;
-	
-	private Timer gameTimer;
-	
-	private JPanel contentPane;
-
 	/**
 	 * Entry point of game, launches the application
 	 */
@@ -54,12 +44,17 @@ public class GameWindow extends JFrame {
 	 * GameWindow Constructor
 	 */
 	public GameWindow() {
+		setTitle("Snake Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		setBounds(100, 100, 615, 640);
+		
+		this.height = this.getHeight();
+		this.width = this.getWidth();
+		this.game = new GameBoard(height, width, "Player1");
+		
+		game.setBorder(new EmptyBorder(5, 5, 5, 5));
+		game.setLayout(new BorderLayout(0, 0));
+		game.setVisible(true);
+		setContentPane(game);
 	}
-
 }
