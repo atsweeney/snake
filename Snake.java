@@ -4,7 +4,10 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
- * @author Group Alpha Date: 11/04/17 Class: CSIS 2450 Assignment: Group Project
+ * @author Group Alpha 
+ * Date: 11/04/17 
+ * Class: CSIS 2450 
+ * Assignment: Group Project
  */
 public class Snake {
 
@@ -14,7 +17,6 @@ public class Snake {
 
 	private ArrayList<Point2D> body = new ArrayList<Point2D>();
 	
-
 	private Direction currentDirection;
 
 	/**
@@ -84,7 +86,7 @@ public class Snake {
 
 		// Moving down
 		if (this.currentDirection == Direction.DOWN) {
-			this.body.add(0, new Point2D.Double(this.getSnakeHead().getX(), this.getSnakeHead().getY() - 1));
+			this.body.add(0, new Point2D.Double(this.getSnakeHead().getX(), this.getSnakeHead().getY() + 1));
 		}
 
 		// Moving left
@@ -94,7 +96,7 @@ public class Snake {
 
 		// Moving up
 		if (this.currentDirection == Direction.UP) {
-			this.body.add(0, new Point2D.Double(this.getSnakeHead().getX(), this.getSnakeHead().getY() + 1));
+			this.body.add(0, new Point2D.Double(this.getSnakeHead().getX(), this.getSnakeHead().getY() - 1));
 		}
 
 		// if snake doesn't grow, remove the last piece of the body

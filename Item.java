@@ -23,8 +23,15 @@ public class Item {
 	 * Item Constructor
 	 * @param goodItem
 	 */
-	public Item(boolean goodItem) {
+	public Item(boolean goodItem, Point2D position) {
+		this.setGoodItem(goodItem);
+		this.setPosition(position);
 		
+		if(this.isGoodItem() == true) {
+			this.setTypeOfItem(ItemType.APPLE);
+		} else {
+			this.setTypeOfItem(ItemType.BOMB);
+		}
 	}
 	
 	/**
