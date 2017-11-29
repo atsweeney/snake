@@ -64,4 +64,18 @@ public class PlayerScore {
 	public void decreaseScore(int points) {
 		this.score -= points;
 	}
+	/**
+	 * Method to reset score
+	 * @param points
+	 */
+	public void resetScore() {
+		this.score = 0;
+	}
+	/**
+	 * Method to get score as a string
+	 * @return
+	 */
+	public String getScoreString(){
+		return this.score + "";
+	}
 }
