@@ -1,6 +1,7 @@
 package snake;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import javax.swing.Timer;
-
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -51,7 +52,7 @@ public class GameBoard extends JPanel implements ActionListener {
 	 */
 	public GameBoard(int height, int width, String playerName) {
 		this.addKeyListener(new Keys());
-		this.setBackground(Color.BLACK);
+		this.setBackground(Color.decode("#000000"));
 		this.setFocusable(true);
 		this.setHeight(height);
 		this.setWidth(width);
@@ -212,6 +213,7 @@ public class GameBoard extends JPanel implements ActionListener {
 
 		if (collisionOccurred() && !isGameOver()) {
 			appleEaten = true;
+			player1Info.increaseScore(1);
 		}
 
 		if (items.size() < 1) {
@@ -221,7 +223,22 @@ public class GameBoard extends JPanel implements ActionListener {
 		if (!isGameOver()) {
 			// System.out.println(appleEaten);
 			player1Snake.move(appleEaten);
-		}  
+		} else { // when game is over offer the user the option to try again
+			new JOptionPane();
+			int retry = JOptionPane.showOptionDialog(this,
+					"Game Over! You scored " + player1Info.getScore() + " points! Do you want to play again?",
+					"GAME OVER", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+			if (retry == JOptionPane.YES_OPTION) {
+				player1Info.resetScore();
+				player1Snake.resetSnake(9, 10);
+				this.setGameOver(false);
+
+			} else {
+				System.exit(0);
+			}
+
+		}
 	}
 
 	/**
@@ -238,10 +255,12 @@ public class GameBoard extends JPanel implements ActionListener {
 				return true;
 			}
 		}
-		
+
 		// check if snake hits border
-		if ((player1Snake.getSnakeHead().getX() == 0 || player1Snake.getSnakeHead().getX() >= this.getWidth() / this.dotSize + 1)
-				|| (player1Snake.getSnakeHead().getY() == 0 || player1Snake.getSnakeHead().getY() >= this.getHeight() / this.dotSize + 1)) {
+		if ((player1Snake.getSnakeHead().getX() == 0
+				|| player1Snake.getSnakeHead().getX() >= this.getWidth() / this.dotSize + 1)
+				|| (player1Snake.getSnakeHead().getY() == 0
+						|| player1Snake.getSnakeHead().getY() >= this.getHeight() / this.dotSize + 1)) {
 			setGameOver(true);
 		}
 
@@ -304,6 +323,16 @@ public class GameBoard extends JPanel implements ActionListener {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		// paint background grid
+		for (int i = 0; i < 20; i++) {
+			for (int j = 0; j < 20; j++) {				
+				if (j % 2 == i % 2) {
+					g.setColor(Color.decode("#111111"));
+					g.fillRect(j * dotSize, i * dotSize, dotSize, dotSize);					
+				}
+				
+			}
+		}
 		draw(g);
 	}
 
@@ -325,6 +354,11 @@ public class GameBoard extends JPanel implements ActionListener {
 		for (Point2D p : player1Snake.getSnake()) {
 			g.fillRect((int) (p.getX() - 1) * dotSize, (int) (p.getY() - 1) * dotSize, dotSize, dotSize);
 		}
+
+		// draw score
+		g.setColor(Color.white);
+		g.setFont(new Font(g.getFont().getFontName(), Font.PLAIN, 30));
+		g.drawString(player1Info.getScoreString(), 560, 30);
 	}
 
 	/**
