@@ -35,6 +35,17 @@ public class Snake {
 		this.currentDirection = Direction.RIGHT;
 		
 	}
+	
+	/**
+	 * Method resets snake in the event of a game restart
+	 */
+	public void resetSnake(double x, double y){
+		this.body.clear();
+		this.body.add(0, new Point2D.Double(x, y));
+		this.body.add(new Point2D.Double(x - 1, y));
+		this.body.add(new Point2D.Double(x - 2, y));
+		this.currentDirection = Direction.RIGHT;
+	}
 
 	/**
 	 * Snake Head Getter
