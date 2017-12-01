@@ -18,6 +18,8 @@ public class Snake {
 	private ArrayList<Point2D> body = new ArrayList<Point2D>();
 	
 	private Direction currentDirection;
+	
+	private boolean moved;
 
 	/**
 	 * Snake Constructor
@@ -31,11 +33,19 @@ public class Snake {
 
 		this.body.add(0, new Point2D.Double(x, y));
 		this.body.add(new Point2D.Double(x - 1, y));
-		this.body.add(new Point2D.Double(x - 2, y));
+		this.body.add(new Point2D.Double(x - 2, y));		
+		
 		this.currentDirection = Direction.RIGHT;
 		
 	}
 	
+	public boolean hasMoved(){
+		return moved;
+	}
+	
+	public void setMoved(boolean b){
+		this.moved = b;
+	}
 	/**
 	 * Method resets snake in the event of a game restart
 	 */
@@ -89,7 +99,8 @@ public class Snake {
 	/**
 	 * Moves snakes coordinates to be painted for animation
 	 */
-	public void move(boolean grow) {
+	public void move(boolean grow) {		
+		
 		// Moving right
 		if (this.currentDirection == Direction.RIGHT) {
 			this.body.add(0, new Point2D.Double(this.getSnakeHead().getX() + 1, this.getSnakeHead().getY()));

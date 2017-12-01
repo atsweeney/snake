@@ -11,8 +11,10 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import javax.swing.Timer;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  * @author Group Alpha Date: 11/04/17 Class: CSIS 2450 Assignment: Group Project
@@ -224,10 +226,46 @@ public class GameBoard extends JPanel implements ActionListener {
 			// System.out.println(appleEaten);
 			player1Snake.move(appleEaten);
 		} else { // when game is over offer the user the option to try again
+			String message = null;
+			ArrayList<PlayerScore> highscores = player1Info.getHighScores();
+
+			// check if the user beat the high score
+			for (int i = 0; i < highscores.size(); i++) {
+				if (player1Info.getScore() > highscores.get(0).getScore()) {
+					message = "<html><h1>Game Over!</h1><br> <h3>You scored " + player1Info.getScore()
+							+ " points!</h3> Congratulations, you beat the high score!<br> Do you want to play again?";
+					highscores.add(0, player1Info);
+					highscores.remove(highscores.size() - 1);
+					player1Info.setHighScores(highscores);
+					break;
+				} else if (player1Info.getScore() > highscores.get(i).getScore()) {
+					message = "<html><h1>Game Over!</h1><br> <h3>You scored " + player1Info.getScore() + " points!</h3> Congratulations, you beat #"
+							+ (i + 1) + "!<br> Do you want to play again?";
+					highscores.add(i, player1Info);
+					highscores.remove(highscores.size() - 1);
+					player1Info.setHighScores(highscores);
+					break;
+				} else {
+					message = "<html><h1>Game Over!</h1><br> <h3>You scored " + player1Info.getScore() + " points!</h3> Do you want to play again?";
+				}
+
+			}
+
+			
+			message += "<br><br><table><tr><th>Place</th><th>Name</td><th>Score</td></tr>";
 			new JOptionPane();
-			int retry = JOptionPane.showOptionDialog(this,
-					"Game Over! You scored " + player1Info.getScore() + " points! Do you want to play again?",
-					"GAME OVER", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+						
+			int count = 1;
+			for (PlayerScore p : player1Info.getHighScores()) {				
+				message += "<tr><td>#" + count + "</td><td>" + p.getName() + "</td><td>" + p.getScore() + "</td></tr>";
+				count++;
+			}
+			message += "</table></html>";
+			
+			
+			
+			int retry = JOptionPane.showOptionDialog(this, new JLabel(message, SwingConstants.CENTER), "GAME OVER", JOptionPane.YES_NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, null, null);
 
 			if (retry == JOptionPane.YES_OPTION) {
 				player1Info.resetScore();
@@ -310,6 +348,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		if (!this.isGameOver()) {
 			play();
 		}
+		player1Snake.setMoved(true);
 		Toolkit.getDefaultToolkit().sync();
 		repaint();
 	}
@@ -325,12 +364,12 @@ public class GameBoard extends JPanel implements ActionListener {
 
 		// paint background grid
 		for (int i = 0; i < 20; i++) {
-			for (int j = 0; j < 20; j++) {				
+			for (int j = 0; j < 20; j++) {
 				if (j % 2 == i % 2) {
 					g.setColor(Color.decode("#111111"));
-					g.fillRect(j * dotSize, i * dotSize, dotSize, dotSize);					
+					g.fillRect(j * dotSize, i * dotSize, dotSize, dotSize);
 				}
-				
+
 			}
 		}
 		draw(g);
@@ -370,18 +409,31 @@ public class GameBoard extends JPanel implements ActionListener {
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
 
+			// if esc key is pressed, pause/unpause game
+			if (key == 27) {
+				if (gameTimer.isRunning()) {
+					gameTimer.stop();
+				} else {
+					gameTimer.start();
+				}
+
+			}
 			if (((key == KeyEvent.VK_LEFT) || (key == KeyEvent.VK_A))
-					&& (player1Snake.getSnakeDirection() != Direction.RIGHT)) {
+					&& (player1Snake.getSnakeDirection() != Direction.RIGHT) && player1Snake.hasMoved()) {
 				player1Snake.setSnakeDirection(Direction.LEFT);
+				player1Snake.setMoved(false);
 			} else if (((key == KeyEvent.VK_RIGHT) || (key == KeyEvent.VK_D))
-					&& (player1Snake.getSnakeDirection() != Direction.LEFT)) {
+					&& (player1Snake.getSnakeDirection() != Direction.LEFT) && player1Snake.hasMoved()) {
 				player1Snake.setSnakeDirection(Direction.RIGHT);
+				player1Snake.setMoved(false);
 			} else if (((key == KeyEvent.VK_UP) || (key == KeyEvent.VK_W))
-					&& (player1Snake.getSnakeDirection() != Direction.DOWN)) {
+					&& (player1Snake.getSnakeDirection() != Direction.DOWN) && player1Snake.hasMoved()) {
 				player1Snake.setSnakeDirection(Direction.UP);
-			} else if (((key == KeyEvent.VK_DOWN) || (key == KeyEvent.VK_S))
+				player1Snake.setMoved(false);
+			} else if (((key == KeyEvent.VK_DOWN) || (key == KeyEvent.VK_S) && player1Snake.hasMoved())
 					&& (player1Snake.getSnakeDirection() != Direction.UP)) {
 				player1Snake.setSnakeDirection(Direction.DOWN);
+				player1Snake.setMoved(false);
 			}
 		}
 	}

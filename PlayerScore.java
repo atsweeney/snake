@@ -1,5 +1,14 @@
 package snake;
 
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 /**
  * @author Group Alpha
  * Date: 11/04/17
@@ -15,6 +24,10 @@ public class PlayerScore {
 	
 	private String name;
 	
+	private String scoreFile = "highscores.txt";
+	
+	private ArrayList<PlayerScore> highscores = new ArrayList<PlayerScore>();
+	
 	/**
 	 * PlayerScore Constructor
 	 * @param name is the name/initials of the player
@@ -23,6 +36,52 @@ public class PlayerScore {
 	public PlayerScore(String name, int score) {
 		this.setName(name);
 		this.score = score;
+	}
+	
+	public ArrayList<PlayerScore> getHighScores(){
+		highscores.clear();
+		try {
+	        BufferedReader reader = new BufferedReader(new FileReader(scoreFile));
+	        String line = reader.readLine();	        
+	        
+	        while (line != null)                
+	        {
+	            try {
+	            	String[] eachLine = line.split(Pattern.quote("\\t"));
+	            	String name = eachLine[0];	            	
+	                int score = Integer.parseInt(eachLine[1]);
+	                highscores.add(new PlayerScore(name, score));
+	                
+	            } catch (NumberFormatException e1) {
+	                System.out.println("Error reading line. Incorrect Format");
+	            }
+	            line = reader.readLine();
+	        }
+	        
+	        reader.close();
+	       
+
+	    } catch (IOException ex) {	    	
+	        System.err.println("ERROR: File does not exist.");	        
+	    }
+		return highscores;
+		
+	}
+	
+	public void setHighScores(ArrayList<PlayerScore> a){
+		try {
+			FileWriter writer = new FileWriter(new File(scoreFile));	
+			String newScores = "";
+			for(PlayerScore p : a){
+				newScores += p.getName() + "\\t" + p.getScore() + "\n";			
+			}			
+			writer.write(newScores);
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -77,5 +136,10 @@ public class PlayerScore {
 	 */
 	public String getScoreString(){
 		return this.score + "";
+	}
+	
+	@Override
+	public String toString(){
+		return this.getName() + " " + this.getScore();
 	}
 }
