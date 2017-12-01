@@ -1,0 +1,10 @@
+Player1\t32
+AAA\t20
+BBB\t19
+CCC\t18
+DDD\t17
+Player1\t17
+EEE\t16
+Player1\t16
+Player1\t16
+FFF\t15
