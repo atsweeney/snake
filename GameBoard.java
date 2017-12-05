@@ -4,13 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import javax.swing.Timer;
+import java.util.TimerTask;
+import java.util.Timer;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,7 +19,7 @@ import javax.swing.SwingConstants;
  * @author Group Alpha Date: 11/04/17 Class: CSIS 2450 Assignment: Group Project
  */
 @SuppressWarnings("serial")
-public class GameBoard extends JPanel implements ActionListener {
+public class GameBoard extends JPanel {
 
 	/**
 	 * Attributes
@@ -28,10 +27,6 @@ public class GameBoard extends JPanel implements ActionListener {
 	private Snake player1Snake;
 
 	private PlayerScore player1Info;
-
-	/**
-	 * To be implemented private PlayerScore[] highScores;
-	 **/
 
 	private int counter;
 
@@ -44,10 +39,16 @@ public class GameBoard extends JPanel implements ActionListener {
 	private int dotSize;
 
 	private int moveSpeed;
-
+	
+	private TimerTask doPlay;
+	
+	private TimerTask updateScreen;
+	
 	private Timer gameTimer;
 
 	private boolean gameOver;
+	
+	private boolean paused;
 
 	/**
 	 * Game Board Constructor
@@ -61,15 +62,34 @@ public class GameBoard extends JPanel implements ActionListener {
 		this.setPlayer1Info(new PlayerScore(playerName, 0));
 		this.setPlayer1Snake(new Snake(9.0, 10.0));
 
-		// Method that reads high scores to go here
-
 		this.items = new ArrayList<Item>();
 		this.dotSize = 30;
 		this.moveSpeed = 100;
 		this.setGameOver(false);
-		this.gameTimer = new Timer(moveSpeed, this);
+		this.gameTimer = new Timer();
 
-		gameTimer.start();
+		this.updateScreen= new TimerTask() {
+
+			@Override
+			public void run() {
+				Toolkit.getDefaultToolkit().sync();
+				repaint();
+			}
+		};
+		
+		this.doPlay = new TimerTask() {
+
+			@Override
+			public void run() {
+				if (!isGameOver()) {
+					play();
+				}
+				player1Snake.setMoved(true);
+			}
+		};
+		
+		this.gameTimer.schedule(updateScreen, 1, 1);
+		this.gameTimer.schedule(doPlay, moveSpeed, moveSpeed);
 	}
 
 	/**
@@ -108,20 +128,6 @@ public class GameBoard extends JPanel implements ActionListener {
 	public void setPlayer1Info(PlayerScore player1Info) {
 		this.player1Info = player1Info;
 	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	/*
-	 * public PlayerScore[] getHighScores() { return highScores; }
-	 *//**
-		 * 
-		 * @param highScores
-		 *//*
-		 * public void setHighScores(PlayerScore[] highScores) { this.highScores
-		 * = highScores; }
-		 */
 
 	/**
 	 * Bad Item Time Counter Getter
@@ -208,7 +214,26 @@ public class GameBoard extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Method that handles a "round" of game play
+	 * Paused Getter
+	 * 
+	 * @return true value if game status is over
+	 */
+	public boolean isPaused() {
+		return paused;
+	}
+
+	/**
+	 * Paused Setter
+	 * 
+	 * @param gameOver
+	 *            is the boolean flag of whether or not game has ended
+	 */
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+	
+	/**
+	 * Method that handles a "round" of game play.
 	 */
 	public void play() {
 		boolean appleEaten = false;
@@ -275,12 +300,11 @@ public class GameBoard extends JPanel implements ActionListener {
 			} else {
 				System.exit(0);
 			}
-
 		}
 	}
-
+	
 	/**
-	 * Method that detects if snake has made contact with an object or itself
+	 * Method that detects if snake has made contact with an object or itself.
 	 * 
 	 * @return boolean indicating whether or not a collision has occurred
 	 */
@@ -298,7 +322,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		if ((player1Snake.getSnakeHead().getX() == 0
 				|| player1Snake.getSnakeHead().getX() >= this.getWidth() / this.dotSize + 1)
 				|| (player1Snake.getSnakeHead().getY() == 0
-						|| player1Snake.getSnakeHead().getY() >= this.getHeight() / this.dotSize + 1)) {
+						|| player1Snake.getSnakeHead().getY() >= this.getHeight() / this.dotSize)) {
 			setGameOver(true);
 		}
 
@@ -341,19 +365,6 @@ public class GameBoard extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Action listener that runs the game in the initialized timer.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (!this.isGameOver()) {
-			play();
-		}
-		player1Snake.setMoved(true);
-		Toolkit.getDefaultToolkit().sync();
-		repaint();
-	}
-
-	/**
 	 * Paints components onto JPanel by calling draw method.
 	 * 
 	 * @param g
@@ -369,7 +380,6 @@ public class GameBoard extends JPanel implements ActionListener {
 					g.setColor(Color.decode("#111111"));
 					g.fillRect(j * dotSize, i * dotSize, dotSize, dotSize);
 				}
-
 			}
 		}
 		draw(g);
@@ -389,7 +399,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		}
 
 		g.setColor(Color.blue);
-
+		
 		for (Point2D p : player1Snake.getSnake()) {
 			g.fillRect((int) (p.getX() - 1) * dotSize, (int) (p.getY() - 1) * dotSize, dotSize, dotSize);
 		}
@@ -411,13 +421,16 @@ public class GameBoard extends JPanel implements ActionListener {
 
 			// if esc key is pressed, pause/unpause game
 			if (key == 27) {
-				if (gameTimer.isRunning()) {
-					gameTimer.stop();
+				if (!isPaused()) {
+					setPaused(true);
+					gameTimer.cancel();
 				} else {
-					gameTimer.start();
+					setPaused(false);
+					gameTimer.schedule(updateScreen, 1, 1);
+					gameTimer.schedule(doPlay, moveSpeed, moveSpeed);
 				}
-
 			}
+			
 			if (((key == KeyEvent.VK_LEFT) || (key == KeyEvent.VK_A))
 					&& (player1Snake.getSnakeDirection() != Direction.RIGHT) && player1Snake.hasMoved()) {
 				player1Snake.setSnakeDirection(Direction.LEFT);

@@ -1,7 +1,7 @@
 package snake;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Group Alpha 
@@ -15,7 +15,7 @@ public class Snake {
 	 * Attributes
 	 */
 
-	private ArrayList<Point2D> body = new ArrayList<Point2D>();
+	private CopyOnWriteArrayList <Point2D> body = new CopyOnWriteArrayList <Point2D>();
 	
 	private Direction currentDirection;
 	
@@ -39,13 +39,22 @@ public class Snake {
 		
 	}
 	
+	/**
+	 * Boolean flag indicating the snake has moved
+	 * @return true if snake has moved
+	 */
 	public boolean hasMoved(){
 		return moved;
 	}
 	
+	/**
+	 * Sets boolean flag indicating if snake has moved
+	 * @param b
+	 */
 	public void setMoved(boolean b){
 		this.moved = b;
 	}
+	
 	/**
 	 * Method resets snake in the event of a game restart
 	 */
@@ -70,9 +79,9 @@ public class Snake {
 	/**
 	 * Snake Body Getter
 	 * 
-	 * @return ArrayList representing snake's body
+	 * @return CopyOnWriteArrayList representing snake's body
 	 */
-	public ArrayList<Point2D> getSnake() {
+	public CopyOnWriteArrayList<Point2D> getSnake() {
 		return body;
 	}
 

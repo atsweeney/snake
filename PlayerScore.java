@@ -38,6 +38,10 @@ public class PlayerScore {
 		this.score = score;
 	}
 	
+	/**
+	 * High Scores Getter
+	 * @return and array list of the high scores
+	 */
 	public ArrayList<PlayerScore> getHighScores(){
 		highscores.clear();
 		try {
@@ -68,6 +72,10 @@ public class PlayerScore {
 		
 	}
 	
+	/**
+	 * High Scores Setter
+	 * @param a is the array list of player scores to be written to file
+	 */
 	public void setHighScores(ArrayList<PlayerScore> a){
 		try {
 			FileWriter writer = new FileWriter(new File(scoreFile));	
