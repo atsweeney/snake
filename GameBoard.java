@@ -71,7 +71,13 @@ public class GameBoard extends JPanel implements ActionListener {
 
 		gameTimer.start();
 	}
-
+	
+	/**
+	 * setName sets the name of the player
+	 */
+	public void setName(String name){
+		this.player1Info.setName(name);
+	}
 	/**
 	 * Player Snake Getter
 	 * 
@@ -264,7 +270,7 @@ public class GameBoard extends JPanel implements ActionListener {
 			
 			
 			
-			int retry = JOptionPane.showOptionDialog(this, new JLabel(message, SwingConstants.CENTER), "GAME OVER", JOptionPane.YES_NO_OPTION,
+			int retry = JOptionPane.showOptionDialog(this, new JLabel(message, SwingConstants.CENTER), "GAME OVER, " + player1Info.getName() , JOptionPane.YES_NO_OPTION,
 					JOptionPane.PLAIN_MESSAGE, null, null, null);
 
 			if (retry == JOptionPane.YES_OPTION) {
@@ -298,7 +304,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		if ((player1Snake.getSnakeHead().getX() == 0
 				|| player1Snake.getSnakeHead().getX() >= this.getWidth() / this.dotSize + 1)
 				|| (player1Snake.getSnakeHead().getY() == 0
-						|| player1Snake.getSnakeHead().getY() >= this.getHeight() / this.dotSize + 1)) {
+						|| player1Snake.getSnakeHead().getY() >= this.getHeight() / this.dotSize )) {
 			setGameOver(true);
 		}
 
@@ -338,6 +344,16 @@ public class GameBoard extends JPanel implements ActionListener {
 			}
 		}
 		return point;
+	}
+	
+	/** Method pause pauses the game */
+	public void pause(){
+		this.gameTimer.stop();
+	}
+	
+	/** Method unpause unpauses the game */
+	public void unpause(){
+		this.gameTimer.start();
 	}
 
 	/**
@@ -399,6 +415,14 @@ public class GameBoard extends JPanel implements ActionListener {
 		g.setFont(new Font(g.getFont().getFontName(), Font.PLAIN, 30));
 		g.drawString(player1Info.getScoreString(), 560, 30);
 	}
+	
+	public void createPauseMenu(){
+		new JOptionPane();
+		int pause = JOptionPane.showOptionDialog(this, "<html><h1>PAUSED</h1></html>", "GAME PAUSED", JOptionPane.CLOSED_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);		
+		if(pause == 0 || pause == -1){
+			unpause();
+		}
+	}
 
 	/**
 	 * Class to handle user key inputs
@@ -412,9 +436,10 @@ public class GameBoard extends JPanel implements ActionListener {
 			// if esc key is pressed, pause/unpause game
 			if (key == 27) {
 				if (gameTimer.isRunning()) {
-					gameTimer.stop();
+					pause();
+					createPauseMenu();
 				} else {
-					gameTimer.start();
+					unpause();
 				}
 
 			}
