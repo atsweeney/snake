@@ -353,7 +353,7 @@ public class GameBoard extends JPanel {
 			int y = (int) (Math.random() * 20) + 1;
 			point.setLocation(x, y);
 
-			if (s.getSnake().contains(point) || (s.getSnakeHead().distance(point) < 2)) {
+			if (s.getSnake().contains(point) || (s.getSnakeHead().distance(point) < 4)) {
 				// System.out.println("Point found.");
 				search = true;
 			} else {
