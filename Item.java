@@ -19,6 +19,8 @@ public class Item {
 	
 	private boolean goodItem;
 	
+	private int counter;
+	
 	/**
 	 * Item Constructor
 	 * @param goodItem
@@ -26,7 +28,7 @@ public class Item {
 	public Item(boolean goodItem, Point2D position) {
 		this.setGoodItem(goodItem);
 		this.setPosition(position);
-		
+		this.setCounter(0);
 		if(this.isGoodItem() == true) {
 			this.setTypeOfItem(ItemType.APPLE);
 		} else {
@@ -34,12 +36,26 @@ public class Item {
 		}
 	}
 	
+	/**couter getter
+	 * @return
+	 */
+	public int getCounter() {
+		return counter;
+	}
+
+	/** counter setter
+	 * @param counter
+	 */
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+
 	/**
 	 * Position Getter
 	 * @return
 	 */
 	public Point2D getPosition() {
-		return position;
+		return this.position;
 	}
 
 	/**
