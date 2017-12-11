@@ -2,10 +2,9 @@ package snake;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -21,7 +20,7 @@ public class PlayerScore {
 
 	private String name;
 
-	private String scoreFile = "/assets/highscores.txt";
+	private String scoreFile = "highscores.txt";
 
 	private ArrayList<PlayerScore> highscores = new ArrayList<PlayerScore>();
 
@@ -44,7 +43,7 @@ public class PlayerScore {
 		int count = 0;
 
 		try {			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(scoreFile)));			
+			BufferedReader reader = new BufferedReader(new FileReader(scoreFile));			
 			String line = reader.readLine();
 
 			while (line != null) {
@@ -71,11 +70,11 @@ public class PlayerScore {
 			try {
 				try {
 					//System.out.println(new File(getClass().getResource(scoreFile).toURI()));
-					writer = new FileWriter(new File(getClass().getResource(scoreFile).toURI()));
+					writer = new FileWriter(new File(scoreFile));
 					writer.write(
-							"Player1\\t32\nAAA\\t20\nBBB\\t19\nCCC\\t18\nDDD\\t17\nPlayer1\\t17\nEEE\\t16\nPlayer1\\t16\nPlayer1\\t16\nFFF\\t15\n");
+							"AAA\\t20\nBBB\\t19\nCCC\\t18\nDDD\\t17\nEEE\\t16\nFFF\\t15\nGGG\\t14\nHHH\\t13\nIII\\t12\nKKK\\t11\n");
 					writer.close();
-				} catch (URISyntaxException | NullPointerException e) {					
+				} catch (NullPointerException e) {					
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -94,7 +93,7 @@ public class PlayerScore {
 	public void setHighScores(ArrayList<PlayerScore> a) {
 		try {
 			FileWriter writer;		
-			writer = new FileWriter(new File(getClass().getResource(scoreFile).toURI()));			 
+			writer = new FileWriter(new File(scoreFile));			 
 			String newScores = "";
 			for (PlayerScore p : a) {
 				newScores += p.getName() + "\\t" + p.getScore() + "\n";
@@ -102,7 +101,7 @@ public class PlayerScore {
 			writer.write(newScores);
 			writer.close();
 
-		} catch (IOException | URISyntaxException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
